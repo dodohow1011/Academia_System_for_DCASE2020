@@ -13,11 +13,6 @@ dcase_util >= 0.2.5, sed-eval >= 0.2.1, psds-eval >= 0.1.0, desed >= 1.1.7
 
 launch `conda_create_environment.sh` (recommended line by line)
 
-### Results
-
-System performance are reported in term of event-based F1-scores
-with a 200ms collar on onsets and a 200ms / 20% of the events length collar on offsets.
-
 ### Reproducing the results
 See [GL-MT] folder.
 
@@ -28,8 +23,6 @@ See [GL-MT] folder.
 In the [`scripts/`][scripts] folder, you can find the different steps to:
 - Download recorded data and synthetic material.
 - Generate synthetic soundscapes
-- Reverberate synthetic data (Not used in the baseline)
-- Separate sources of recorded and synthetic mixtures 
 
 
 **It is likely that you'll have download issues with the real recordings.
@@ -109,3 +102,6 @@ If you have any problem feel free to contact Hao Yen (b05901090@ntu.edu.tw)
 [dcase2019-task4]: http://dcase.community/challenge2019/task-sound-event-detection-in-domestic-environments
 [dcase-discussions]: https://groups.google.com/forum/#!forum/dcase-discussions
 [website]: http://dcase.community/challenge2020/
+
+[scripts]: ./scripts
+[GL-MT]: ./GL-MT
