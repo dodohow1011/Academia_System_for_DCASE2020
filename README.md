@@ -3,45 +3,23 @@
 - Information about the DCASE 2020 challenge please visit the challenge [website].
 - You can find discussion about the dcase challenge here: [dcase-discussions]. 
 
+## Dependencies
+
 Python >= 3.6, pytorch >= 1.0, cudatoolkit>=9.0, pandas >= 0.24.1, scipy >= 1.2.1, pysoundfile >= 0.10.2,
 scaper >= 1.3.5, librosa >= 0.6.3, youtube-dl >= 2019.4.30, tqdm >= 4.31.1, ffmpeg >= 4.1, 
 dcase_util >= 0.2.5, sed-eval >= 0.2.1, psds-eval >= 0.1.0, desed >= 1.1.7
 
-A simplified installation procedure example is provided below for python 3.6 based Anconda distribution 
-for Linux based system:
-1. [install Ananconda][anaconda_download]
-2. launch `conda_create_environment.sh` (recommended line by line)
+## Environment
 
-
-In our case, we use only the ouput of the second source.
-
-To get the predictions of the combination of SED and SS we do as follow:
-- Get the output (not binarized with threshold) of the validation soundscapes (usual SED)
-- Get the output (not binarized with threshold) of the DESED foreground source from SS model.
-- Take the average of both outputs.
-- Apply thresholds (different for F-scores and psds)
-- Apply median filtering (0.45s)
+launch `conda_create_environment.sh` (recommended line by line)
 
 ### Results
 
-System performance are reported in term of event-based F-scores [[1]] 
+System performance are reported in term of event-based F1-scores
 with a 200ms collar on onsets and a 200ms / 20% of the events length collar on offsets.
 
-Additionally, the PSDS [[2]] performance are reported. 
-
-*F-scores are computed using a single operating point (threshold=0.5) 
-while other PSDS values are computed using 50 operating points (linear from 0.01 to 0.99).*
-
-- Sound event detection baseline:
-
-|         | Macro F-score Event-based | PSDS macro F-score | PSDS | PSDS cross-trigger | PSDS macro
-----------|--------------------------:|-------------------:|-----:|-------------------:|----------:
-Validation| **34.8 %**                | **60.0%**          | 0.610| 0.524              | 0.433
-
-
-
 ### Reproducing the results
-See [baseline] folder.
+See [GL-MT] folder.
 
 ## Dataset
 
@@ -127,3 +105,7 @@ YOTsn73eqbfc_10.000_20.000.wav	0.163	0.665	Alarm_bell_ringing
 
 ## Contact
 If you have any problem feel free to contact Hao Yen (b05901090@ntu.edu.tw) 
+
+[dcase2019-task4]: http://dcase.community/challenge2019/task-sound-event-detection-in-domestic-environments
+[dcase-discussions]: https://groups.google.com/forum/#!forum/dcase-discussions
+[website]: http://dcase.community/challenge2020/
