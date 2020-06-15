@@ -29,8 +29,7 @@ In the [`scripts/`][scripts] folder, you can find the different steps to:
 At the end of the download, please send a mail with the TSV files
 created in the `missing_files` directory.** ([to Nicolas Turpault and Romain Serizel](#contact)).
 
-However, if none of the audio files have been downloaded, it is probably due to an internet, proxy problem.
-See [Desed repo][desed] or [Desed_website][desed_website] for more info.
+**Please store data in the given structure as stated in ['scripts/'][scripts]
 
 ### Description
 - The **sound event detection** dataset is using [desed] dataset.
