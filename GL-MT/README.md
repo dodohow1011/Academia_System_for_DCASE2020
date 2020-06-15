@@ -2,6 +2,10 @@
 
 See in config.py the different paths if you want to modify them for your own data.
 
+# Pre-trained feature extractor
+
+The pre-trained feature extractor is in ./stored_data/pretrained_model
+
 ## Train SED model
 
 - `python main.py`
