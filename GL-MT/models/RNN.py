@@ -17,7 +17,7 @@ class BidirectionalGRU(nn.Module):
 
 class MS(nn.Module):
     def __init__(self):
-        super(Postnet, self).__init__()
+        super(MS, self).__init__()
         self.rnn = BidirectionalGRU(160, 128, dropout=0.5, num_layers=2)
         self.dense = nn.Linear(256, 10)
         self.dense_softmax = nn.Linear(256, 10)

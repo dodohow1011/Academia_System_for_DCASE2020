@@ -117,7 +117,7 @@ def segment_based_evaluation_df(reference, estimated, time_resolution=1.):
 def adaptive_median_filter(pred_strong, decoder):
     pred_strong_m = pred_strong
     classes = []
-    median_window = [18, 52, 29, 11, 15, 161, 190, 80, 18, 170]
+    median_window = [18, 52, 29, 11, 15, 161, 196, 80, 18, 177]
     pred = decoder(pred_strong)
     for class_id in range(10):
         m = median_window[class_id]
@@ -126,7 +126,7 @@ def adaptive_median_filter(pred_strong, decoder):
     return pred_strong_m
 
 
-def get_predictions(encoder, ema, ps, dataloader, decoder, pooling_time_ratio=1, thresholds=[0.5],
+def get_predictions(encoder, ema, ms, dataloader, decoder, pooling_time_ratio=1, thresholds=[0.5],
                     median_window=1, save_predictions=None):
     """ Get the predictions of a trained model on a specific set
     Args:
@@ -157,8 +157,7 @@ def get_predictions(encoder, ema, ps, dataloader, decoder, pooling_time_ratio=1,
         input_data = to_cuda_if_available(input_data)
         with torch.no_grad():
             enc_strong, enc_weak, feature = encoder(input_data)
-            # combine_input = torch.cat([feature, input_data.squeeze(1)], dim=-1)
-            pred_strong, pred_weak = ema(feature)
+            pred_strong, pred_weak = ms(feature)
 
         phi = generate_label(0.5*(enc_weak+pred_weak)).unsqueeze(1)
         pred_strong = pred_strong * phi
@@ -183,7 +182,7 @@ def get_predictions(encoder, ema, ps, dataloader, decoder, pooling_time_ratio=1,
 
                 pred_strong_m = adaptive_median_filter(pred_strong_bin, decoder)
                 # enc_strong_m = adaptive_median_filter(enc_strong_bin, decoder)
-                pred = decoder(enc_strong_m)
+                pred = decoder(pred_strong_m)
                 pred = pd.DataFrame(pred, columns=["event_label", "onset", "offset"])
                 # Put them in seconds
                 pred.loc[:, ["onset", "offset"]] *= pooling_time_ratio / (cfg.sample_rate / cfg.hop_size)

@@ -16,7 +16,7 @@ from torch import nn
 from dcase_util.data import ProbabilityEncoder
 from data_utils.Desed import DESED
 from data_utils.DataLoad import DataLoadDf, ConcatDataset, MultiStreamBatchSampler
-from TestModel import _load_crnn
+from TestModel import _load_model
 from evaluation_measures import get_predictions, psds_score, compute_psds_from_operating_points, compute_metrics
 from models.models import PS
 from models.RNN import MS
@@ -260,7 +260,7 @@ if __name__ == '__main__':
     # ##############
     dataset = DESED(base_feature_dir=os.path.join(cfg.workspace, "dataset", "features"),
                     compute_log=False)
-    dfs = get_dfs(dataset, reduced_number_of_data)
+    dfs = get_dfs(dataset)
 
     # Meta path for psds
     durations_validation = get_durations_df(cfg.validation, cfg.audio_validation_dir)
@@ -354,7 +354,7 @@ if __name__ == '__main__':
         'ms_optimizer': {"name": ms_optim.__class__.__name__,
                       'args': '',
                       "kwargs": optim_kwargs,
-                      'state_dict': pt_optim.state_dict()},
+                      'state_dict': ms_optim.state_dict()},
         'ps_optimizer': {"name": ps_optim.__class__.__name__,
                       'args': '',
                       "kwargs": optim_kwargs,
@@ -410,12 +410,12 @@ if __name__ == '__main__':
 
         # Callbacks
         if cfg.checkpoint_epochs is not None and (epoch + 1) % cfg.checkpoint_epochs == 0:
-            model_fname = os.path.join(saved_model_dir, "baseline_epoch_" + str(epoch))
+            model_fname = os.path.join(saved_model_dir, "ms_epoch_" + str(epoch))
             torch.save(state, model_fname)
 
         if cfg.save_best:
             if save_best_cb.apply(valid_synth_f1):
-                model_fname = os.path.join(saved_model_dir, "baseline_best")
+                model_fname = os.path.join(saved_model_dir, "ms_best")
                 torch.save(state, model_fname)
             results.loc[epoch, "global_valid"] = valid_synth_f1
         results.loc[epoch, "loss"] = loss_value.item()
@@ -426,41 +426,3 @@ if __name__ == '__main__':
                 logger.warn("EARLY STOPPING")
                 break
 
-    if cfg.save_best:
-        model_fname = os.path.join(saved_model_dir, "baseline_best")
-        state = torch.load(model_fname)
-        PS = _load_crnn(state)
-        logger.info(f"testing model: {model_fname}, epoch: {state['epoch']}")
-    else:
-        logger.info("testing model of last epoch: {}".format(cfg.n_epoch))
-    results_df = pd.DataFrame(results).to_csv(os.path.join(saved_pred_dir, "results.tsv"),
-                                              sep="\t", index=False, float_format="%.4f")
-    # ##############
-    # Validation
-    # ##############
-    crnn.eval()
-    transforms_valid = get_transforms(cfg.max_frames, scaler, add_axis_conv)
-    predicitons_fname = os.path.join(saved_pred_dir, "baseline_validation.tsv")
-
-    validation_data = DataLoadDf(dfs["validation"], encod_func, transform=transforms_valid, return_indexes=True)
-    validation_dataloader = DataLoader(validation_data, batch_size=cfg.batch_size, shuffle=False, drop_last=False)
-    validation_labels_df = dfs["validation"].drop("feature_filename", axis=1)
-    durations_validation = get_durations_df(cfg.validation, cfg.audio_validation_dir)
-    # Preds with only one value
-    valid_predictions = get_predictions(crnn, validation_dataloader, many_hot_encoder.decode_strong,
-                                        pooling_time_ratio, median_window=median_window,
-                                        save_predictions=predicitons_fname)
-    compute_metrics(valid_predictions, validation_labels_df, durations_validation)
-
-    # ##########
-    # Optional but recommended
-    # ##########
-    # Compute psds scores with multiple thresholds (more accurate). n_thresholds could be increased.
-    n_thresholds = 50
-    # Example of 5 thresholds: 0.1, 0.3, 0.5, 0.7, 0.9
-    list_thresholds = np.arange(1 / (n_thresholds * 2), 1, 1 / n_thresholds)
-    pred_ss_thresh = get_predictions(crnn, validation_dataloader, many_hot_encoder.decode_strong,
-                                     pooling_time_ratio, thresholds=list_thresholds, median_window=median_window,
-                                     save_predictions=predicitons_fname)
-    psds = compute_psds_from_operating_points(pred_ss_thresh, validation_labels_df, durations_validation)
-    psds_score(psds, filename_roc_curves=os.path.join(saved_pred_dir, "figures/psds_roc.png"))

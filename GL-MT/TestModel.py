@@ -34,7 +34,7 @@ def _load_model(state, model_name="PS"):
     
     ms_args = state["MS"]["args"]
     ms_kwargs = state["MS"]["kwargs"]
-    ms = Postnet()
+    ms = MS()
     ms.load_state_dict(state["MS"]["state_dict"])
     ms.eval()
     ms = to_cuda_if_available(ms)
@@ -153,26 +153,10 @@ if __name__ == '__main__':
     params = _load_state_vars(expe_state, gt_df_feat, median_window)
 
     # Preds with only one value
-    single_predictions = get_predictions(params["ps"], params["ema"], params["ps"], params["dataloader"],
+    single_predictions = get_predictions(params["ps"], params["ema"], params["ms"], params["dataloader"],
                                          params["many_hot_encoder"].decode_strong, params["pooling_time_ratio"],
                                          median_window=params["median_window"],
                                          save_predictions=f_args.save_predictions_path)
     compute_metrics(single_predictions, groundtruth, durations)
 
-    # ##########
-    # Optional but recommended
-    # ##########
-    # Compute psds scores with multiple thresholds (more accurate). n_thresholds could be increased.
-    n_thresholds = 50
-    # Example of 5 thresholds: 0.1, 0.3, 0.5, 0.7, 0.9
-    list_thresholds = np.arange(1 / (n_thresholds * 2), 1, 1 / n_thresholds)
-    pred_ss_thresh = get_predictions(params["model"], params["ema"], params["ms"], params["dataloader"],
-                                     params["many_hot_encoder"].decode_strong, params["pooling_time_ratio"],
-                                     thresholds=list_thresholds, median_window=params["median_window"],
-                                     save_predictions=f_args.save_predictions_path)
-    psds = compute_psds_from_operating_points(pred_ss_thresh, groundtruth, durations)
-    fname_roc = None
-    if f_args.save_predictions_path is not None:
-        fname_roc = osp.splitext(f_args.save_predictions_path)[0] + "_roc.png"
-    psds_score(psds, filename_roc_curves=fname_roc)
 
