@@ -21,6 +21,14 @@ python TestModel.py -m "model_path" -g ../dataset/metadata/validation/validation
 
 ## Result
 
+# MS
+
 |         | Event-based    | Segment-based    |
 ----------|---------------:|-----------------:|
-Validation| **45.68 %**    | **71.96%         |
+Validation| **45.68%**     | **71.96%**       |
+
+# EMA
+
+|         | Event-based    | Segment-based    |
+----------|---------------:|-----------------:|
+Validation| **45.65%**     | **71.87%**       |
