@@ -18,3 +18,9 @@ The best model will be stored in `./stored_data/`
 python TestModel.py -m "model_path" -g ../dataset/metadata/validation/validation.tsv  \
 -ga ../dataset/audio/validation -s stored_data/gl-mt/validation_predictions.tsv 
 ```
+
+## Result
+
+|         | Event-based    | Segment-based    |
+----------|------------- -:|--------------- -:|
+Validation| **45.68 %**    | **71.96%         |
