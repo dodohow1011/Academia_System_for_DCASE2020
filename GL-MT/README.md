@@ -21,13 +21,13 @@ python TestModel.py -m "model_path" -g ../dataset/metadata/validation/validation
 
 ## Result
 
-# MS
+**MS**
 
 |         | Event-based    | Segment-based    |
 ----------|---------------:|-----------------:|
 Validation| **45.68%**     | **71.96%**       |
 
-# EMA
+**EMA**
 
 |         | Event-based    | Segment-based    |
 ----------|---------------:|-----------------:|
