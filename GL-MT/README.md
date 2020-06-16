@@ -31,7 +31,6 @@ System performance are reported in term of event-based F-scores with a 200ms col
 |         | Event-based    | Segment-based    |
 ----------|---------------:|-----------------:|
 Validation| **45.68%**     | **71.96%**       |
-----------|---------------:|-----------------:|
 Evaluation| **47.47%**     | **74.63%**       |
 
 **EMA**
@@ -39,5 +38,4 @@ Evaluation| **47.47%**     | **74.63%**       |
 |         | Event-based    | Segment-based    |
 ----------|---------------:|-----------------:|
 Validation| **45.65%**     | **71.87%**       |
-----------|---------------:|-----------------:|
 Evaluation| **48.50%**     | **75.83%**       |
