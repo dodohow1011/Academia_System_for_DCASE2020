@@ -231,7 +231,7 @@ if __name__ == '__main__':
     f_args = parser.parse_args()
     pprint(vars(f_args))
 
-    add_dir_model_name = "gl-mt-ema"
+    add_dir_model_name = "gl-mt"
 
     store_dir = os.path.join("stored_data", add_dir_model_name)
     saved_model_dir = os.path.join(store_dir, "model")
